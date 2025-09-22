@@ -37,6 +37,8 @@ ClubActivities
 
 
 
+
+
 //================ Question 2 ====================
 // Map SchoolCode to its full school name:
 //   "SAMIT" → "School of Advance Media and IT"
@@ -60,4 +62,27 @@ Programs
   })
   .Where(x => x.RequiredCourseCount >= 22)
   .OrderBy(x => x.Program)
+  .Dump();
+
+
+//================ Question 3 ====================
+// Show all non-Canadian students who have not made any tuition payments.
+// Output: StudentNumber, CountryName, FullName, ClubMembershipCount ("None" if zero).
+// Order: LastName ascending.
+
+Students
+  .Where(student =>
+	  student.Countries.CountryName != "Canada" &&
+	  student.StudentPayments.Count() == 0
+  )
+  .OrderBy(student => student.LastName)
+  .Select(student => new
+  {
+	  StudentNumber = student.StudentNumber,
+	  CountryName = student.Countries.CountryName,
+	  FullName = student.FirstName + " " + student.LastName,
+	  ClubMembershipCount = student.ClubMembers.Count() == 0
+							  ? "None"
+							  : student.ClubMembers.Count().ToString()
+  })
   .Dump();
