@@ -34,3 +34,16 @@ ClubActivities
   })
   .OrderBy(x => x.StartDate)
   .Dump();
+
+
+
+//================ Question 2 ====================
+// Map SchoolCode to its full school name:
+//   "SAMIT" → "School of Advance Media and IT"
+//   "SEET"  → "School of Electrical Engineering Technology"
+//   All other codes → "Unknown"
+// For each program, include the program name, count the number of required courses and optional courses,
+// keep only programs with RequiredCourseCount ≥ 22,
+// order by Program (ascending).
+// Output: School, Program, RequiredCourseCount, OptionalCourseCount
+
