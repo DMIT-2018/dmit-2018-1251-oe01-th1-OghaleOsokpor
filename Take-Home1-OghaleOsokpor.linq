@@ -86,3 +86,57 @@ Students
 							  : student.ClubMembers.Count().ToString()
   })
   .Dump();
+
+
+//================ Question 4 ====================
+// Show all active instructors (Position = "Instructor", ReleaseDate = null)
+// who have taught at least one class in ClassOfferings.
+// Output: ProgramName, FullName, WorkLoad ("High" >24, "Med" >8, else "Low").
+// Order: by number of ClassOfferings (descending), then by LastName (ascending).
+
+Employees
+  .Where(instructor =>
+	  instructor.Position.Description == "Instructor" &&
+	  instructor.ReleaseDate == null &&
+	  instructor.ClassOfferings.Count() > 0
+  )
+  .Select(instructor => new
+  {
+	  ProgramName = instructor.Program.ProgramName,
+	  FullName = instructor.FirstName + " " + instructor.LastName,
+	  LastName = instructor.LastName,               
+	  OfferingCount = instructor.ClassOfferings.Count(),
+	  WorkLoad = instructor.ClassOfferings.Count() > 24 ? "High"
+					: instructor.ClassOfferings.Count() > 8 ? "Med"
+					: "Low"
+  })
+  .OrderByDescending(x => x.OfferingCount)
+  .ThenBy(x => x.LastName)
+  .Select(x => new
+  {
+	  ProgramName = x.ProgramName,
+	  FullName = x.FullName,
+	  WorkLoad = x.WorkLoad
+  })
+  .Dump();
+
+//================ Question 5 ====================
+// Snapshot of all clubs.
+// Output: Supervisor ("Unknown" if Employee is null), ClubName, MemberCount,
+// Activities ("None Schedule" if no ClubActivities, else the count).
+// Order: MemberCount descending.
+
+Clubs
+  .Select(club => new
+  {
+	  Supervisor = club.Employee == null
+					  ? "Unknown"
+					  : (club.Employee.FirstName + " " + club.Employee.LastName),
+	  Club = club.ClubName,
+	  MemberCount = club.ClubMembers.Count(),
+	  Activities = club.ClubActivities.Count() == 0
+					  ? "None Schedule"
+					  : club.ClubActivities.Count().ToString()
+  })
+  .OrderByDescending(x => x.MemberCount)
+  .Dump();
